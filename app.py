@@ -1,8 +1,8 @@
+import os
 from flask import Flask, request, jsonify, render_template, session, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 import numpy as np
 import joblib
-from tensorflow.keras.models import load_model
 from datetime import datetime
 import re
 import difflib
@@ -13,11 +13,44 @@ app.secret_key = "eb52ff17b1883d05fe80b296de3ccbe9bc3ea321c4398e6f6a0d2a722cc9f4
 USERS = {
     "ben": generate_password_hash("ben12345")
 }
+
 # =========================
-# LOAD MODEL
+# LOAD MODEL & SCALER
 # =========================
-model = load_model("model.h5")
 scaler = joblib.load("scaler.pkl")
+
+USE_TENSORFLOW = False
+tf_model = None
+np_weights = None
+
+try:
+    from tensorflow.keras.models import load_model
+    if os.path.exists("model.h5"):
+        tf_model = load_model("model.h5")
+        USE_TENSORFLOW = True
+except Exception:
+    USE_TENSORFLOW = False
+
+if not USE_TENSORFLOW:
+    if os.path.exists("model_weights.npz"):
+        weights_data = np.load("model_weights.npz")
+        np_weights = [weights_data[f] for f in weights_data.files]
+
+def predict_model(scaled_features):
+    if USE_TENSORFLOW and tf_model is not None:
+        return tf_model.predict(scaled_features, verbose=0)
+    elif np_weights is not None:
+        def relu(x):
+            return np.maximum(0, x)
+        def softmax(x):
+            e = np.exp(x - np.max(x, axis=-1, keepdims=True))
+            return e / np.sum(e, axis=-1, keepdims=True)
+        h1 = relu(np.dot(scaled_features, np_weights[0]) + np_weights[1])
+        h2 = relu(np.dot(h1, np_weights[2]) + np_weights[3])
+        h3 = relu(np.dot(h2, np_weights[4]) + np_weights[5])
+        return softmax(np.dot(h3, np_weights[6]) + np_weights[7])
+    else:
+        raise RuntimeError("No AI model weights loaded!")
 
 history = []
 latest_result = {}
@@ -194,7 +227,7 @@ def predict():
     ]])
 
     scaled = scaler.transform(features)
-    prediction = model.predict(scaled, verbose=0)
+    prediction = predict_model(scaled)
 
     kelas = int(np.argmax(prediction))
     confidence = round(float(np.max(prediction)) * 100, 2)
