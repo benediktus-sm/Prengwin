@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, render_template, session, redirect, url_for
+import os
 from werkzeug.security import generate_password_hash, check_password_hash
 import numpy as np
 import joblib
@@ -8,7 +9,7 @@ import re
 import difflib
 
 app = Flask(__name__, static_folder="static")
-app.secret_key = "eb52ff17b1883d05fe80b296de3ccbe9bc3ea321c4398e6f6a0d2a722cc9f436"
+app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 
 USERS = {
     "ben": generate_password_hash("ben12345")
