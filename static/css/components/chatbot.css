@@ -1,0 +1,48 @@
+/* ===========================
+   CHATBOT CSS - AgriTwin AI
+   GEMASTIK 2026
+   =========================== */
+
+.chat-box {
+  height: 220px;
+  overflow-y: auto;
+  background: var(--bg-input);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  margin-bottom: 10px;
+  scroll-behavior: smooth;
+}
+
+.chat-box p {
+  margin-bottom: 6px;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.chat-box hr {
+  border: none;
+  border-top: 1px solid var(--border-input);
+  margin: 8px 0;
+}
+
+.chat-input {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input input {
+  flex: 1;
+}
+
+.chat-input button {
+  width: auto;
+  margin-top: 0;
+  padding: 12px 20px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .chat-box {
+    height: 140px;
+  }
+}

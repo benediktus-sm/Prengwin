@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AgriTwin AI - Platform Digital Twin Pertanian Padi berbasis AI. Prediksi risiko penyakit, kondisi lahan, dan hasil panen secara real-time." />
+  <title>AgriTwin AI - Smart Agriculture Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">🌾 <span>AgriTwin</span> AI</div>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Buka menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#fitur">Fitur</a>
+        <a href="#cara-kerja">Cara Kerja</a>
+        <a href="#tentang">Tentang</a>
+        <a href="{{ url_for('login') }}" class="nav-cta">Masuk</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <span class="badge">🏆 GEMASTIK 2026 • Smart Agriculture AI System</span>
+      <h1>Digital Twin Cerdas untuk <span class="highlight">Pertanian Padi</span> Masa Depan</h1>
+      <p class="hero-desc">
+        AgriTwin AI membantu petani dan peneliti memantau kondisi lahan, memprediksi risiko penyakit,
+        dan mengestimasi hasil panen secara real-time menggunakan kecerdasan buatan.
+      </p>
+      <div class="hero-actions">
+        <a href="{{ url_for('login') }}" class="btn-primary">Masuk Dashboard →</a>
+        <a href="#fitur" class="btn-secondary">Pelajari Fitur</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <strong>95%</strong>
+          <span>Akurasi Prediksi</span>
+        </div>
+        <div class="stat">
+          <strong>24/7</strong>
+          <span>Monitoring Real-time</span>
+        </div>
+        <div class="stat">
+          <strong>3+</strong>
+          <span>Parameter Dianalisis</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="fitur">
+    <div class="section-header">
+      <span class="section-tag">Fitur Unggulan</span>
+      <h2>Semua yang Kamu Butuhkan dalam Satu Platform</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🦠</div>
+        <h3>Prediksi Risiko Penyakit</h3>
+        <p>Deteksi dini potensi serangan hama dan penyakit tanaman padi berbasis model AI yang terlatih dari data lapangan.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌱</div>
+        <h3>Kondisi Lahan Real-time</h3>
+        <p>Pantau kelembaban, suhu, dan kesehatan tanah secara langsung melalui dashboard yang mudah dipahami.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Estimasi Hasil Panen</h3>
+        <p>Prediksi jumlah hasil panen berdasarkan data historis dan kondisi lahan terkini untuk perencanaan lebih baik.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔔</div>
+        <h3>Notifikasi Cerdas</h3>
+        <p>Dapatkan peringatan otomatis saat kondisi lahan berisiko sehingga tindakan bisa diambil lebih cepat.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="how-it-works" id="cara-kerja">
+    <div class="section-header">
+      <span class="section-tag">Cara Kerja</span>
+      <h2>Tiga Langkah Sederhana</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Input Data Lahan</h3>
+        <p>Masukkan data sensor atau kondisi lahan padi milikmu ke dalam sistem.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>AI Menganalisis</h3>
+        <p>Model AI memproses data dan membuat prediksi risiko serta estimasi hasil panen.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Ambil Keputusan</h3>
+        <p>Lihat hasil analisis di dashboard dan ambil tindakan yang tepat lebih awal.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" id="tentang">
+    <p>🌾 AgriTwin AI — Dikembangkan untuk GEMASTIK 2026</p>
+    <p class="footer-small">Smart Agriculture AI System</p>
+  </footer>
+
+  <script>
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      navToggle.classList.toggle('active');
+    });
+  </script>
+
+</body>
+</html>

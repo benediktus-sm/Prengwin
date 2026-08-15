@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AgriTwin AI Dashboard - Monitoring AI, Prediksi Risiko, Deteksi Penyakit, dan GIS untuk Pertanian Padi" />
+    <title>AgriTwin AI - Dashboard</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- AgriTwin CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/sidebar.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/chatbot.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+
+      <!-- Sidebar -->
+      {% include 'components/sidebar.html' %}
+
+      <!-- Main Content -->
+      <div class="main">
+
+        <!-- Header -->
+        <div class="header">
+          <h1>Smart Agriculture Digital Twin</h1>
+          <p>AI Monitoring • Prediction • Disease Detection • GIS</p>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-title">Risk Level</div>
+            <div class="kpi-value" id="riskCard">-</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-title">Yield Prediction</div>
+            <div class="kpi-value" id="yieldCard">-</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-title">Confidence AI</div>
+            <div class="kpi-value" id="confidenceCard">-</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-title">Health Status</div>
+            <div class="kpi-value" id="statusCard">-</div>
+          </div>
+        </div>
+
+        <!-- Input & Result -->
+        <div class="grid-2">
+          <div class="card">
+            <h3>➜ Input Sensor Data</h3>
+            <div class="input-grid">
+              <input id="suhu_udara" placeholder="Suhu Udara (°C)" />
+              <input id="kelembapan_udara" placeholder="Kelembapan Udara (%)" />
+              <input id="curah_hujan" placeholder="Curah Hujan (mm)" />
+              <input id="cahaya" placeholder="Intensitas Cahaya (lux)" />
+              <input id="angin" placeholder="Kecepatan Angin (m/s)" />
+              <input id="soil_moisture" placeholder="Soil Moisture (%)" />
+              <input id="ph" placeholder="pH Tanah" />
+              <input id="npk" placeholder="NPK" />
+              <input id="soil_temp" placeholder="Suhu Tanah (°C)" />
+              <input id="water_level" placeholder="Water Level (cm)" />
+              <input id="ndvi" placeholder="NDVI" />
+              <input id="hst" placeholder="HST (hari)" />
+              <input id="varietas" placeholder="Varietas (0/1/2)" />
+            </div>
+            <button onclick="predict()">🚀 ANALISIS AGRITWIN AI</button>
+          </div>
+
+          <div class="card">
+            <h3>▣ AI Result</h3>
+            <div class="result-box">
+              <h2 id="riskText">-</h2>
+              <h1 id="yieldText">-</h1>
+              <p id="analysisText"></p>
+            </div>
+            <div class="analysis-box">
+              <h4>🌱 Prediksi Penyakit</h4>
+              <p id="diseaseText">-</p>
+              <br />
+              <h4>🎯 AI Score</h4>
+              <p id="scoreText">-</p>
+            </div>
+            <div class="explain-box">
+              <h4>📌 Explainable AI</h4>
+              <ul id="reasonList"></ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- History Chart -->
+        <div class="chart-card">
+          <h3>📈 Histori Risiko &amp; Yield</h3>
+          <div class="chart-container">
+            <canvas id="historyChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Double Chart -->
+        <div class="double-chart">
+          <div class="small-chart">
+            <h3>🎯 Confidence AI</h3>
+            <canvas id="confidenceChart"></canvas>
+          </div>
+          <div class="small-chart">
+            <h3>🌾 AI Score</h3>
+            <canvas id="scoreChart"></canvas>
+          </div>
+        </div>
+
+        <!-- GIS Map -->
+        <div class="chart-card">
+          <h3>🗺️ Digital Twin GIS Map</h3>
+          <div id="map"></div>
+        </div>
+
+        <!-- Chatbot -->
+        <div class="card" style="margin-top: 20px">
+          <h3>🤖 AI Chatbot + Voice Assistant</h3>
+          <div id="chatBox" class="chat-box"></div>
+          <div class="chat-input">
+            <input id="chatInput" placeholder="Tanya kondisi lahan..." />
+            <button onclick="sendChat()">Kirim</button>
+            <button onclick="startVoice()">🎤</button>
+          </div>
+        </div>
+
+        <!-- History Table -->
+        <div class="card" style="margin-top: 20px">
+          <h3>📋 Riwayat Analisis</h3>
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Waktu</th>
+                <th>Risk</th>
+                <th>Yield</th>
+                <th>Confidence</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="historyTable"></tbody>
+          </table>
+        </div>
+
+        <!-- Footer -->
+        {% include 'components/footer.html' %}
+
+      </div>
+    </div>
+
+    <!-- AgriTwin JS -->
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+  </body>
+</html>
