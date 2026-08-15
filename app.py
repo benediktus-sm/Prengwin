@@ -3,7 +3,7 @@ import os
 from werkzeug.security import generate_password_hash, check_password_hash
 import numpy as np
 import joblib
-from tensorflow.keras.models import load_model
+from ai_edge_litert.interpreter import Interpreter
 from datetime import datetime
 import re
 import difflib
@@ -17,7 +17,10 @@ USERS = {
 # =========================
 # LOAD MODEL
 # =========================
-model = load_model("model.h5")
+interpreter = Interpreter(model_path="model.tflite")
+interpreter.allocate_tensors()
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
 scaler = joblib.load("scaler.pkl")
 
 history = []
@@ -194,8 +197,11 @@ def predict():
         safe_float(data["varietas"])
     ]])
 
-    scaled = scaler.transform(features)
-    prediction = model.predict(scaled, verbose=0)
+    scaled = scaler.transform(features).astype(np.float32)
+
+    interpreter.set_tensor(input_details[0]['index'], scaled)
+    interpreter.invoke()
+    prediction = interpreter.get_tensor(output_details[0]['index'])
 
     kelas = int(np.argmax(prediction))
     confidence = round(float(np.max(prediction)) * 100, 2)
@@ -290,4 +296,4 @@ def status():
 # RUN
 # =========================
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=False)
